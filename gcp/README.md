@@ -15,7 +15,7 @@ Make sure to have the following resources / APIs enabled in GCP:
 - [ ] Kubernetes API enabled
 - [ ] GCR API enabled
 
-We recommend executing all commands from the root fo this project and not from this sub-folder.
+We recommend executing all commands from the root of this project and not from this sub-folder.
 ### Source your env file in the root directory with the GCLOUD Settings
 ```
 $ source .env 
