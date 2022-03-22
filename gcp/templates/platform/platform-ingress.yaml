@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: datacater-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.gcp.addressName }}
+    networking.gke.io/managed-certificates: platform-cert
+    kubernetes.io/ingress.class: {{ .Values.gcp.ingressClass }}
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  defaultBackend:
+    service:
+      name: platform-service
+      port:
+        number: 80

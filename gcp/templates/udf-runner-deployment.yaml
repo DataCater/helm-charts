@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "datacater-chart.fullname" . }}-udf-runner
+  labels:
+    app: udf-runner
+spec:
+  selector:
+    matchLabels:
+      app: udf-runner
+  template:
+    metadata:
+      labels:
+          app: udf-runner
+    spec:
+      {{- with .Values.datacater.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "datacater.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}-udf-runner
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.udfRunner.image.repository }}:{{ .Values.udfRunner.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.datacater.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9999
+              protocol: TCP

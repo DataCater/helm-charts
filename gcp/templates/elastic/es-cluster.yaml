@@ -1,0 +1,37 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: datacater
+spec:
+  version: 7.15.2
+  http:
+    tls:
+     selfSignedCertificate:
+       disabled: true
+  nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.store.allow_mmap: false
+      xpack.security.authc:
+        anonymous:
+          username: anonymous
+          roles: superuser
+          authz_exception: false
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xmx512M -Xms512M
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "1G"
+            limits:
+              cpu: "500m"
+              memory: "1G"

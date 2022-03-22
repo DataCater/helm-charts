@@ -1,0 +1,76 @@
+# GCP related settings
+gcp:
+  # Used by cloud-sql proxy for targeting the right cloud-sql instance
+  cloudSqlInstance: ""
+  # Secret name for cloudSQL service account: https://cloud.google.com/sql/docs/mysql/connect-kubernetes-engine#service-account-key-file
+  cloudSQLKey: datacater-key
+  # Service Account for interacting with GCR
+  serviceAccountKey: datacater-key
+  # IngressClass to be used. Change according to your needs. We default to GKE's default.
+  ingressClass: "gce"
+  # GCP static ip address name for datacater to keep fixed ip's on new deployments
+  addressName: datacater-gcp-ip
+
+datacater:
+  # Image pull secret name for datacater registry: images.datacater.io
+  imagePullSecrets:
+    - name: datacater
+  # Service account for datacater. No action needed, give datacater permissions to create pods and deployments
+  serviceAccount:
+    name: datacater-main
+  imagePullPolicy: Always
+  # Used for Google Cloud ManagedCert and From field in mails.
+  publicDomainName: datacater.example.com
+
+
+# DataCater uses a service called udf-runner for enabling interactive python development
+udfRunner:
+  image:
+    repository: images.datacater.io/datacater/udf-runner
+    pullPolicy: IfNotPresent
+
+platform:
+  # Google Cloud LoadBalancer needs type NodePort. If you use a different IngressClass you could change accordingly.
+  serviceType: NodePort
+  # Storage for flat files stored by DataCater
+  storageRequest: 50Gi
+  image:
+    repository: images.datacater.io/datacater/platform
+    pullPolicy: IfNotPresent
+  # These values are loaded into platform-containers via platform-configmap.yaml
+  envConfigMap:
+    # DataCater uses this mail for the FROM field
+    dataCaterMailerFrom: datacater@example.com
+    # Only when debugging it might be useful to set this to true
+    dataCaterKeepDefaultUser: false
+    # Default email address to retrieve credentials
+    dataCaterDefaultUser: false
+    elasticSearchHost: datacater-es-http
+    elasticsearchPort: "9200"
+    kafkaHost: datacater-kafka-bootstrap
+    kafkaPort: "9092"
+    kafkaConnectHost: datacater-connect-api
+    kafkaConnectPort: "8083"
+    deploymentType: k8
+    pgHost: "127.0.0.1" # connect via cloud sql proxy
+    mailerTLS: "no"
+    mailerSSL: "no"
+
+# DataCater needs some secrets to be loaded into the platform container. These are pulled via secrets
+dataCaterSecretMappings:
+  pgSecretName: "datacater-db-secret"
+  pgSecrets:
+    pgUser: "pg_user"
+    pgPassword: "pg_password"
+  imagePullSecrets: "datacater"
+  dockerLoginSecret: "datacater-docker"
+  dockerSecrets:
+    dockerRegistryURI: "docker_registry_uri"
+    dockerRegistryUser: "docker_registry_user"
+    dockerRegistryPassword: "docker_registry_password"
+  mailerSecretName: "datacater-mailer-secret"
+  mailerSecrets:
+    mailer_host: "host"
+    mailer_port: "port"
+    mailer_user: "smtp_username"
+    mailer_password: "password"

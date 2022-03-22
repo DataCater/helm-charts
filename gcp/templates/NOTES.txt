@@ -1,0 +1,14 @@
+Get the application URL by running these commands:
+
+GCP will create a mangedcertificate for the DNS you provided:
+
+    datacater.publicDomainName: {{ .Values.datacater.publicDomainName }}
+
+Check the status of your managedcertification before going to above domain
+with following command:
+
+    kubectl describe managedcertificate platform-cert -n datacater
+
+This might take ~60 min until the certificate is available.
+See point 9 under https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs#setting_up_a_google-managed_certificate
+Happy Data Pipelines development on DataCater!

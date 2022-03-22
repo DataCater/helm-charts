@@ -1,0 +1,9 @@
+apiVersion: v2
+name: datacater
+description: GKE targeted DataCater Helm Chart
+
+type: application
+
+version: 0.6.3
+
+appVersion: "2022.04-pre1"
