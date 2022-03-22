@@ -18,12 +18,13 @@ Go from zero to production in a matter of minutes.
     |-- templates
     `-- values.yaml <--- GCP values.yaml (6)
 ```
-*(1)* Description of DataCater and how to install it.
-*(2)* Contains settings, which need to be configured by the users of this chart.
-*(3)* Template for an `.env` file and which environment variables are needed.
-*(4)* Contains GCP specific manifests and datacater installation on GKE.
-*(5)* GCP specific guidance on how to set up cluster.
-*(6)* Reference for configuring DataCater installation on GCP.
+
+* (1) Description of DataCater and how to install it.
+* (2) Contains settings, which need to be configured by the users of this chart.
+* (3) Template for an `.env` file and which environment variables are needed.
+* (4) Contains GCP specific manifests and datacater installation on GKE.
+* (5) GCP specific guidance on how to set up cluster.
+* (6) Reference for configuring DataCater installation on GCP.
 
 ## What you will install
 The following diagram shows what will be installed by the helm charts in this repository. Boxes with
