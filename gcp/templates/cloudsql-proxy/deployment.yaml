@@ -1,0 +1,43 @@
+{{ if .Values.gcp.standaloneCloudSqlProxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-sql-proxy
+  labels:
+    app: cloud-sql-proxy
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: cloud-sql-proxy
+  template:
+    metadata:
+      labels:
+        app: cloud-sql-proxy
+    spec:
+      terminationGracePeriodSeconds: 300
+      {{- with .Values.datacater.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "datacater.serviceAccountName" . }}
+      restartPolicy: Always
+      volumes:
+        - name: google-cloudsql-key
+          secret:
+            secretName: {{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlKey }}
+      containers:
+        - name: cloud-sql-proxy
+          image: "gcr.io/cloudsql-docker/gce-proxy:{{- .Values.gcp.cloudSqlProxyVersion -}}"
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances={{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlInstances }}=tcp:5432"
+            - "-credential_file=/secrets/key.json"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /secrets/
+              name: google-cloudsql-key
+              readOnly: true
+{{ end }}
