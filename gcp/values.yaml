@@ -19,6 +19,8 @@ gcp:
     # Secrets containing service account json. Defaults to cloudSqlProxy sidecar config. Can be changed.
     cloudSqlKey: datacater-key
     serviceAccountKey: datacater-key
+    # Target DB port defaults postgresql default
+    targetPort: 5432
 
 
 datacater:
