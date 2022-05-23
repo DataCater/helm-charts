@@ -10,6 +10,18 @@ gcp:
   ingressClass: "gce"
   # GCP static ip address name for datacater to keep fixed ip's on new deployments
   addressName: datacater-gcp-ip
+  # cloudSql-proxy version
+  cloudSqlProxyVersion: "1.27.0"
+  # GCP cloudSQL-proxy as standalone service for connecting to CloudSQL instances without firewall rules
+  standaloneCloudSqlProxy:
+    enabled: true
+    cloudSqlInstances: ""
+    # Secrets containing service account json. Defaults to cloudSqlProxy sidecar config. Can be changed.
+    cloudSqlKey: datacater-key
+    serviceAccountKey: datacater-key
+    # Target DB port defaults postgresql default
+    targetPort: 5432
+
 
 datacater:
   # Image pull secret name for datacater registry: images.datacater.io

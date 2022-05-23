@@ -62,7 +62,7 @@ spec:
             failureThreshold: 30
             periodSeconds: 300
         - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.27.0
+          image: "gcr.io/cloudsql-docker/gce-proxy:{{- .Values.gcp.cloudSqlProxyVersion -}}"
           command:
             - "/cloud_sql_proxy"
             - "-instances={{ .Values.gcp.cloudSqlInstance }}=tcp:5432"
