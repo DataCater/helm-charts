@@ -17,7 +17,6 @@ spec:
       labels:
         app: datacater-platform
     spec:
-      terminationGracePeriodSeconds: 300
       {{- with .Values.datacater.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
