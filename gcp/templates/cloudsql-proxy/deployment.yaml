@@ -29,7 +29,7 @@ spec:
             - containerPort: {{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}
           command:
             - "/cloud_sql_proxy"
-            - "-instances={{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlInstances }}=tcp:{{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}"
+            - "-instances={{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlInstances }}=tcp:0.0.0.0:{{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}"
             - "-credential_file=/secrets/key.json"
           securityContext:
             runAsNonRoot: true
