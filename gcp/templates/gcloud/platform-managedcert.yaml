@@ -1,7 +1,9 @@
+{{ if .Values.gcp.managedCertName -}}
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: platform-cert
+  name: {{ .Values.gcp.managedCertName }}
 spec:
   domains:
     - {{ trimPrefix "https://" .Values.datacater.publicDomainName }}
+{{ end -}}
