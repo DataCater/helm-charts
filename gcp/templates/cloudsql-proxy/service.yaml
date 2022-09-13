@@ -1,17 +1,18 @@
-{{- if .Values.gcp.standaloneCloudSqlProxy.enabled -}}
+{{ range $index, $value := .Values.gcp.standaloneCloudSqlProxy -}}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloud-sql-proxy
+  name: cloud-sql-proxy-{{ $index }}
   labels:
-    app: cloud-sql-proxy
+    app: cloud-sql-proxy-{{ $index }}
 spec:
   selector:
-    app: cloud-sql-proxy
+    app: cloud-sql-proxy-{{ $index }}
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: {{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}
+      targetPort: {{ $value.targetPort }}
       protocol: TCP
       name: http
-{{- end -}}
+{{ end -}}

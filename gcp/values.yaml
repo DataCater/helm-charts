@@ -2,6 +2,9 @@
 gcp:
   # Used by cloud-sql proxy for targeting the right cloud-sql instance
   cloudSqlInstance: ""
+  # managedCertName indicates if a gcp managedCert is installed for datacater.publicDomainName. If not we will fall back to http
+  # managedCertName: "" will be treated as no gcp managed certificate being available
+  managedCertName: ""
   # Secret name for cloudSQL service account: https://cloud.google.com/sql/docs/mysql/connect-kubernetes-engine#service-account-key-file
   cloudSQLKey: datacater-key
   # Service Account for interacting with GCR
@@ -12,15 +15,16 @@ gcp:
   addressName: datacater-gcp-ip
   # cloudSql-proxy version
   cloudSqlProxyVersion: "1.27.0"
-  # GCP cloudSQL-proxy as standalone service for connecting to CloudSQL instances without firewall rules
+  # A list of gcp cloudSQL proxies to be installed into the cluster
+  # service names will be cloud-sql-proxy-$index, where $index is the index of the item in below list
+  # Remove the below block if none standalone proxy is needed
   standaloneCloudSqlProxy:
-    enabled: true
-    cloudSqlInstances: ""
-    # Secrets containing service account json. Defaults to cloudSqlProxy sidecar config. Can be changed.
-    cloudSqlKey: datacater-key
-    serviceAccountKey: datacater-key
-    # Target DB port defaults postgresql default
-    targetPort: 5432
+    - cloudSqlInstance: "project:region:instance"
+      # Secrets containing service account json. Defaults to cloudSqlProxy sidecar config. Can be changed.
+      cloudSqlKey: datacater-key
+      serviceAccountKey: datacater-key
+      # Target DB port defaults postgresql default
+      targetPort: 5432
 
 
 datacater:

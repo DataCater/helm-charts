@@ -20,8 +20,6 @@ spec:
       serviceAccountName: {{ include "datacater.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}-udf-runner
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.udfRunner.image.repository }}:{{ .Values.udfRunner.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.datacater.imagePullPolicy }}
           ports:

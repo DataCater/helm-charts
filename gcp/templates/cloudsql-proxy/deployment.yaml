@@ -1,35 +1,36 @@
-{{ if .Values.gcp.standaloneCloudSqlProxy.enabled }}
+{{ range  $index, $value := .Values.gcp.standaloneCloudSqlProxy -}}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloud-sql-proxy
+  name: cloud-sql-proxy-{{ $index }}
   labels:
-    app: cloud-sql-proxy
+    app: cloud-sql-proxy-{{ $index }}
 spec:
   strategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: cloud-sql-proxy
+      app: cloud-sql-proxy-{{ $index }}
   template:
     metadata:
       labels:
-        app: cloud-sql-proxy
+        app: cloud-sql-proxy-{{ $index }}
     spec:
-      serviceAccountName: {{ include "datacater.serviceAccountName" . }}
+      serviceAccountName: datacater-main
       restartPolicy: Always
       volumes:
         - name: google-cloudsql-key
           secret:
-            secretName: {{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlKey }}
+            secretName: {{ $value.cloudSqlKey }}
       containers:
         - name: cloud-sql-proxy
-          image: "gcr.io/cloudsql-docker/gce-proxy:{{- .Values.gcp.cloudSqlProxyVersion -}}"
+          image: "gcr.io/cloudsql-docker/gce-proxy:{{- $.Values.gcp.cloudSqlProxyVersion -}}"
           ports:
-            - containerPort: {{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}
+            - containerPort: {{ $value.targetPort }}
           command:
             - "/cloud_sql_proxy"
-            - "-instances={{ .Values.gcp.standaloneCloudSqlProxy.cloudSqlInstances }}=tcp:0.0.0.0:{{ .Values.gcp.standaloneCloudSqlProxy.targetPort }}"
+            - "-instances={{ $value.cloudSqlInstance }}=tcp:0.0.0.0:{{ $value.targetPort }}"
             - "-credential_file=/secrets/key.json"
           securityContext:
             runAsNonRoot: true
@@ -37,5 +38,4 @@ spec:
             - mountPath: /secrets/
               name: google-cloudsql-key
               readOnly: true
-{{ end }}
-
+{{ end -}}
