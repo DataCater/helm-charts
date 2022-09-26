@@ -44,6 +44,7 @@ datacater:
         cpu: 0.5
         memory: 6Gi
       limits:
+        cpu: 0.5
         memory: 6Gi
 
 # DataCater uses a service called udf-runner for enabling interactive python development
