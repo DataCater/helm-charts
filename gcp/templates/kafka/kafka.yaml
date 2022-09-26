@@ -4,8 +4,10 @@ metadata:
   name: datacater
 spec:
   kafka:
+    resources:
+      {{- toYaml .Values.datacater.kafka.resources | nindent 6 }}
     version: 2.8.0
-    replicas: 3
+    replicas: {{ .Values.datacater.kafka.replicas }}
     listeners:
       - name: plain
         port: 9092

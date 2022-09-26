@@ -37,6 +37,14 @@ datacater:
   imagePullPolicy: Always
   # Used for Google Cloud ManagedCert and From field in mails.
   publicDomainName: datacater.example.com
+  kafka:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 6Gi
+      limits:
+        memory: 6Gi
   connect:
     replicas: 2
     resources:
