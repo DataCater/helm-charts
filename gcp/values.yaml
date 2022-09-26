@@ -37,7 +37,14 @@ datacater:
   imagePullPolicy: Always
   # Used for Google Cloud ManagedCert and From field in mails.
   publicDomainName: datacater.example.com
-
+  connect:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 6Gi
+      limits:
+        memory: 6Gi
 
 # DataCater uses a service called udf-runner for enabling interactive python development
 udfRunner:
