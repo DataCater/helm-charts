@@ -4,7 +4,7 @@ description: GKE targeted DataCater Helm Chart
 
 type: application
 
-version: 0.8.3
+version: 0.8.4
 
-appVersion: "2022.10-pre6"
+appVersion: "2022.10-pre7"
 
