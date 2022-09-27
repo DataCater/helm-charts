@@ -11,6 +11,22 @@ datacater:
   publicDomainName: datacater.example.com
   # GCR used for storing pipeline images follows $GEO.gcr.io/$PROJECT_ID/$PIPELINE_REGISTRY
   pipelineRegistry: eu.gcr.io/example-project-id/pipeline-registry
+  kafka:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 6Gi
+      limits:
+        memory: 6Gi
+  connect:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 6Gi
+      limits:
+        memory: 6Gi
 
 platform:
   envConfigMap:
