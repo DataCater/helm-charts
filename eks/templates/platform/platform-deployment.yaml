@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datacater-platform
+  labels:
+    app: datacater-platform
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: datacater-platform
+  template:
+    metadata:
+      annotations:
+        platform.configmap/roll: {{ include (print $.Template.BasePath "/platform/platform-configmap.yaml") . | sha256sum }}
+      labels:
+        app: datacater-platform
+    spec:
+      {{- with .Values.datacater.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "datacater.serviceAccountName" . }}
+      restartPolicy: Always
+      volumes:
+        - name: datacater-uploads
+          persistentVolumeClaim:
+            claimName: datacater-platform-pvc
+      containers:
+        - name: datacater-platform
+          env:
+            {{- include "datacater.platform.env" . | indent 12 }}
+            {{- include "datacater.platform-secrets.env" . | indent 12 }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+          securityContext:
+            privileged: true
+          image: "{{ .Values.platform.image.repository }}:{{ .Values.platform.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.datacater.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: datacater-uploads
+              mountPath: "/app/uploads"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 300
+            periodSeconds: 30
+          startupProbe:
+            httpGet:
+              port: 80
+              path: /
+            failureThreshold: 30
+            periodSeconds: 300

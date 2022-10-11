@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: datacater-platform-pvc
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+    storage: datacater-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.platform.storageRequest }}

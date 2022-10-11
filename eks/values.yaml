@@ -1,0 +1,18 @@
+# DataCater needs some secrets to be loaded into the platform container. These are pulled via secrets
+dataCaterSecretMappings:
+  pgSecretName: "datacater-db-secret"
+  pgSecrets:
+    pgUser: "pg_user"
+    pgPassword: "pg_password"
+  imagePullSecrets: "datacater"
+  dockerLoginSecret: "datacater-docker"
+  dockerSecrets:
+    dockerRegistryURI: "docker_registry_uri"
+    dockerRegistryUser: "docker_registry_user"
+    dockerRegistryPassword: "docker_registry_password"
+  mailerSecretName: "datacater-mailer-secret"
+  mailerSecrets:
+    mailer_host: "host"
+    mailer_port: "port"
+    mailer_user: "smtp_username"
+    mailer_password: "password"

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datacater-platform-config
+data:
+  dc_mailer_from_name: {{ .Values.platform.envConfigMap.dataCaterMailerFrom | default "DataCater" | quote }}
+  dc_mailer_from_address: {{ required "Required .Values.platform.data.dataCaterMailerFrom: example datacater@yourcompany.com." .Values.platform.envConfigMap.dataCaterMailerFrom | quote }}
+  dc_keep_default_user: {{ .Values.platform.envConfigMap.dataCaterKeepDefaultUser | default true | quote }}
+  dc_default_user: {{ .Values.platform.envConfigMap.dataCaterDefaultUser | quote }}
+  dc_public_uri: {{ .Values.datacater.publicDomainName | quote }}
+  elasticsearch_host: {{ .Values.platform.envConfigMap.elasticSearchHost }}.{{ .Release.Namespace }}.svc.cluster.local
+  elasticsearch_port: {{ .Values.platform.envConfigMap.elasticsearchPort | quote }}
+  dc_udf_runner_hostname: udf-runner.{{ .Release.Namespace }}.svc.cluster.local
+  dc_udf_runner_port: "9999"
+  kafka_host: {{ .Values.platform.envConfigMap.kafkaHost }}.{{ .Release.Namespace }}.svc.cluster.local
+  kafka_port: {{ .Values.platform.envConfigMap.kafkaPort | quote }}
+  kafka_connect_host: {{ .Values.platform.envConfigMap.kafkaConnectHost }}.{{ .Release.Namespace }}.svc.cluster.local
+  kafka_connect_port: {{ .Values.platform.envConfigMap.kafkaConnectPort | quote }}
+  imagePullSecrets: datacater
+  pipeline_registry: {{ required "Required .Values.datacater.pipelineRegistry: example myregistry.fordatacater.io. Used to push and pull images from" .Values.datacater.pipelineRegistry }}
+  deployment_type: {{ .Values.platform.envConfigMap.deploymentType | quote }}
+  pg_host: {{ .Values.platform.envConfigMap.pgHost }}
+  dc_chart_version: {{ .Chart.Version | quote}}
+  mailer_tls: {{ .Values.platform.envConfigMap.mailerTLS | default "no" | quote }}
+  mailer_ssl: {{ .Values.platform.envConfigMap.mailerSSL | default "no" | quote }}
