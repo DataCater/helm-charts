@@ -3,8 +3,11 @@ kind: Ingress
 metadata:
   name: datacater-ingress
   annotations:
-    # TODO change to accordingly
-    kubernetes.io/ingress.class: "default"
+    {{- if .Values.platform.ingress.enabled }}
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    {{- end }}
 spec:
   defaultBackend:
     service:

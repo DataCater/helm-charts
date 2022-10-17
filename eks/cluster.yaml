@@ -1,0 +1,23 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: datacater
+  region: eu-central-1
+
+nodeGroups:
+  - name: ng-1
+    instanceType: m5.2xlarge # 8CPU and 32GiB Mem
+#    instanceType: r6.xlarge 4CPU and 32GiB Mem
+    desiredCapacity: 2
+    volumeSize: 80
+    labels: { usage: datacater }
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+
+# Enter Subnets if private vpc is being used .. here:
+# vpc:
+#   subnets:
+#     private:
+#       eu-central-1a: { id: subnet-0ff156e0c4a6d300c }
+

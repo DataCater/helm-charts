@@ -3,7 +3,7 @@ kind: KafkaConnect
 metadata:
   name: datacater
 spec:
-  version: 2.8.0
+  version: 3.2.3
   resources:
     {{- toYaml .Values.datacater.connect.resources | nindent 4 }}
   replicas: {{ .Values.datacater.connect.replicas }}
