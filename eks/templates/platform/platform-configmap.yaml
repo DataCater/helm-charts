@@ -20,6 +20,7 @@ data:
   pipeline_registry: {{ required "Required .Values.datacater.pipelineRegistry: example myregistry.fordatacater.io. Used to push and pull images from" .Values.datacater.pipelineRegistry }}
   deployment_type: {{ .Values.platform.envConfigMap.deploymentType | quote }}
   pg_host: {{ .Values.platform.envConfigMap.pgHost }}
+  pg_database_name: {{ .Values.platform.envConfigMap.pgDatabaseName | default "datacater" }}
   dc_chart_version: {{ .Chart.Version | quote}}
   mailer_tls: {{ .Values.platform.envConfigMap.mailerTLS | default "no" | quote }}
   mailer_ssl: {{ .Values.platform.envConfigMap.mailerSSL | default "no" | quote }}

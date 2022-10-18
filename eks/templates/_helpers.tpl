@@ -107,6 +107,11 @@ Helper function for getting env variables for platform
     configMapKeyRef:
         name: datacater-platform-config
         key: kafka_port
+- name: PG_DATABASE_NAME
+  valueFrom:
+    configMapKeyRef:
+        name: datacater-platform-config
+        key: pg_database_name
 - name: PG_HOST
   valueFrom:
     configMapKeyRef:
