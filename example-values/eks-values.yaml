@@ -1,8 +1,8 @@
 datacater:
   publicDomainName: datacater.example.com
   # Elastic Container Registyr is used for storing pipeline images.
-  # pipelineRegistry: $account_id.dkr.ecr.$region.amazonaws.com
-  pipelineRegistry: 193290265706.dkr.ecr.eu-central-1.amazonaws.com
+  # pipelineRegistry: $account_id.dkr.ecr.$region.amazonaws.com/repository
+  pipelineRegistry: 000000000000.dkr.ecr.eu-central-1.amazonaws.com/repository
   kafka:
     replicas: 3
     resources:
