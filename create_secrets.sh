@@ -5,6 +5,8 @@ set -u
 
 # shellcheck source=/dev/null
 K8S_DISTRIBUTION="AWS"
+AWS_REGION="eu-central-1"
+
 source .env
 
 # Create namespace
@@ -51,12 +53,12 @@ if [ $K8S_DISTRIBUTION == "GCP" ]; then
         --docker-email="_json_key" \
         --namespace "${DATACATER_NAMESPACE}"
 elif [ $K8S_DISTRIBUTION == "AWS" ]; then
-    echo "Retrieving AWS ECR Password by executing 'aws ecr get-login-password --region eu-central-1'."
+    echo "Retrieving AWS ECR Password by executing 'aws ecr get-login-password --region $AWS_REGION'."
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
         --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
         --docker-username="AWS" \
-        --docker-password="$(aws ecr get-login-password --region eu-central-1)" \
+        --docker-password="$(aws ecr get-login-password --region $AWS_REGION)" \
         --docker-email="AWS" \
         --namespace "${DATACATER_NAMESPACE}"
 else

@@ -1,5 +1,5 @@
 # datacater-helm-chart
-Helm chart for deploying DataCater on Elast Kubernetes Service (EKS).
+Helm chart for deploying DataCater on Elastic Kubernetes Service (EKS).
 
 1. Make sure you are logged in to the right account and region for the setup.
   ```bash

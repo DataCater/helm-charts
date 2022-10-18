@@ -21,7 +21,8 @@ Go from zero to production in a matter of minutes.
     |-- Chart.yaml
     |-- README.md <--- EKS specific installation instructions (8)
     |-- templates
-    `-- values.yaml <--- EKS values.yaml (9)
+    |-- cluster.yaml <--- (9)
+    `-- values.yaml <--- EKS values.yaml (10)
 ```
 
 * (1) Description of DataCater and how to install it.
@@ -30,9 +31,10 @@ Go from zero to production in a matter of minutes.
 * (4) Contains GCP specific manifests and datacater installation on GKE.
 * (5) GCP specific guidance on how to set up cluster.
 * (6) Reference for configuring DataCater installation on GCP.
-* (7) 
-* (8) 
-* (9) 
+* (7) EKS specific helm chart, including manifests and guidance for installation of DataCater in EKS.
+* (8) EKS specific installation instructions. Make sure to adjust the cluster.yaml
+* (9) Cluster specification for usage by eksctl.
+* (10) Default values of datacater helm chart.
 
 ## What you will install
 The following diagram shows what will be installed by the helm charts in this repository. Boxes with
@@ -76,8 +78,12 @@ helm install elastic-operator elastic/eck-operator -n datacater --set=webhook.en
 ```
 
 3. Install Chart with
+For GCP use:
 ```bash
-K8S_DISTRIBUTION=eks
-helm upgrade --install -n datacater datacater $K8S_DISTRIBUTION
+helm upgrade --install -n datacater datacater gcp
 ```
 
+For EKS use:
+```bash
+helm upgrade --install -n datacater datacater eks
+```
