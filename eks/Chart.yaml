@@ -1,0 +1,9 @@
+apiVersion: v2
+name: datacater
+description: DataCater helm chart for EKS
+
+type: application
+
+version: 0.8.4
+
+appVersion: "2022.10"

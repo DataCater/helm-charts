@@ -1,0 +1,26 @@
+### DataCater specific environment variables
+DATACATER_NAMESPACE=datacater
+# TODO: Required DataCater registry mail
+DATACATER_REGISTRY_USER=datacater@example.com
+# TODO: Required DataCater registry password
+DATACATER_REGISTRY_PW=my-datacater-password
+# TODO: Required DataCater From Address
+DATACATER_MAIL_FROM=datacater@example.com
+# TODO: Required mailserver to be used by DataCater
+DATACATER_MAIL_SERVER=smtp.example.com
+# TODO: Required mailserver username
+DATACATER_MAIL_USER=mail@example.com
+# TODO: Required mailserver password
+DATACATER_MAIL_PW=my-mail-password
+# TODO: Required mailserver port
+DATACATER_MAIL_PORT=587
+# TODO: Registry URI for DataCater Pipeline Images
+DATACATER_PIPELINE_REGISTRY_URI=gcr.io/example.com
+# TODO: DataCater DB username
+DATACATER_DB_USER=postgres
+# TODO: DataCater DB password
+DATACATER_DB_PW=datacater
+# TODO: DataCater DB port
+DATACATER_DB_PORT=5432
+# TODO: DataCater DB HOST | 127.0.0.1 for contexts with cloudSQLProxy
+DATACATER_DB_HOST=127.0.0.1
