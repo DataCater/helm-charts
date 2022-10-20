@@ -4,9 +4,7 @@ set +e
 set -u
 
 # shellcheck source=/dev/null
-K8S_DISTRIBUTION="AWS"
-AWS_REGION="eu-central-1"
-
+K8S_DISTRIBUTION=""
 source .env
 
 # Create namespace
@@ -44,7 +42,7 @@ kubectl create secret generic datacater-docker \
     --from-literal=docker_registry_password="${DATACATER_REGISTRY_PW}" \
     --namespace "${DATACATER_NAMESPACE}"
 
-if [ $K8S_DISTRIBUTION == "GCP" ]; then
+if [ -n "$K8S_DISTRIBUTION" ] && [ "$K8S_DISTRIBUTION" == "GCP" ]; then
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
         --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
@@ -52,7 +50,7 @@ if [ $K8S_DISTRIBUTION == "GCP" ]; then
         --docker-password="$(cat key.json)" \
         --docker-email="_json_key" \
         --namespace "${DATACATER_NAMESPACE}"
-elif [ $K8S_DISTRIBUTION == "AWS" ]; then
+elif [ -n "$K8S_DISTRIBUTION" ] && [ "$K8S_DISTRIBUTION" == "AWS" ]; then
     echo "Retrieving AWS ECR Password by executing 'aws ecr get-login-password --region $AWS_REGION'."
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
@@ -61,14 +59,16 @@ elif [ $K8S_DISTRIBUTION == "AWS" ]; then
         --docker-password="$(aws ecr get-login-password --region $AWS_REGION)" \
         --docker-email="AWS" \
         --namespace "${DATACATER_NAMESPACE}"
+elif [ -n "${PIPELINE_REGISTRY}" ]; then
+    echo "Pipeline Registry is set to ${PIPELINE_REGISTRY}, setting Password and Username from environment variables"
+    kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
+    kubectl create secret docker-registry pipeline-registry \
+        --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
+        --docker-username="$PIPELINE_REGISTRY_USER" \
+        --docker-password="$PIPELINE_REGISTRY_PW" \
+        --docker-email="$PIPELINE_REGISTRY_USER" \
+        --namespace "${DATACATER_NAMESPACE}"
 else
-    echo >&2 "Env variable K8S_DISTRIBUTION is either not set or to a value other then AWS or GCP!"
+    echo "Env variable K8S_DISTRIBUTION is either not set or to a value other then AWS or GCP!"
     exit 1
-fi
-
-if [ $K8S_DISTRIBUTION == "GCP" ]; then
-    kubectl delete secret datacater-key --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
-    kubectl create secret generic datacater-key \
-        --from-file='key.json' \
-        -n "${DATACATER_NAMESPACE}"
 fi
