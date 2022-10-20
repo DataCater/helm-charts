@@ -24,3 +24,10 @@ DATACATER_DB_PW=datacater
 DATACATER_DB_PORT=5432
 # TODO: DataCater DB HOST | 127.0.0.1 for contexts with cloudSQLProxy
 DATACATER_DB_HOST=127.0.0.1
+
+# TODO: has the form of $account_id.dkr.ecr.$region.amazonaws.com/repository
+PIPELINE_REGISTRY=000000000000.dkr.ecr.eu-central-1.amazonaws.com/
+# TODO: standard user ist 'AWS' for ECR
+PIPELINE_REGISTRY_USER="AWS"
+# TODO: you can retrieve your ecr password via aws ecr get-login-password
+PIPELINE_REGISTRY_PW=your-pw-for-ecr
