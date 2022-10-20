@@ -46,7 +46,8 @@ platform:
     kafkaPort: "9092"
     kafkaConnectHost: datacater-connect-api
     kafkaConnectPort: "8083"
-    pgHost: "127.0.0.1:5432"
+    pgHost: "127.0.0.1"
+    pgDatabaseName: "datacater"
     deploymentType: k8
     mailerTLS: "no"
     mailerSSL: "no"
