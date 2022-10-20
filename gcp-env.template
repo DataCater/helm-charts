@@ -15,7 +15,7 @@ DATACATER_MAIL_PW=my-mail-password
 # TODO: Required mailserver port
 DATACATER_MAIL_PORT=587
 # TODO: Registry URI for DataCater Pipeline Images
-DATACATER_PIPELINE_REGISTRY_URI=gcr.io/example.com
+PIPELINE_REGISTRY=gcr.io/example.com
 # TODO: DataCater DB username
 DATACATER_DB_USER=postgres
 # TODO: DataCater DB password

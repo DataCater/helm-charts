@@ -45,7 +45,7 @@ kubectl create secret generic datacater-docker \
 if [ -n "$K8S_DISTRIBUTION" ] && [ "$K8S_DISTRIBUTION" == "GCP" ]; then
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
-        --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
+        --docker-server="${PIPELINE_REGISTRY}" \
         --docker-username="_json_key" \
         --docker-password="$(cat key.json)" \
         --docker-email="_json_key" \
@@ -54,7 +54,7 @@ elif [ -n "$K8S_DISTRIBUTION" ] && [ "$K8S_DISTRIBUTION" == "AWS" ]; then
     echo "Retrieving AWS ECR Password by executing 'aws ecr get-login-password --region $AWS_REGION'."
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
-        --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
+        --docker-server="${PIPELINE_REGISTRY}" \
         --docker-username="AWS" \
         --docker-password="$(aws ecr get-login-password --region $AWS_REGION)" \
         --docker-email="AWS" \
@@ -63,7 +63,7 @@ elif [ -n "${PIPELINE_REGISTRY}" ]; then
     echo "Pipeline Registry is set to ${PIPELINE_REGISTRY}, setting Password and Username from environment variables"
     kubectl delete secret pipeline-registry --namespace "${DATACATER_NAMESPACE}" --ignore-not-found
     kubectl create secret docker-registry pipeline-registry \
-        --docker-server="${DATACATER_PIPELINE_REGISTRY_URI}" \
+        --docker-server="${PIPELINE_REGISTRY}" \
         --docker-username="$PIPELINE_REGISTRY_USER" \
         --docker-password="$PIPELINE_REGISTRY_PW" \
         --docker-email="$PIPELINE_REGISTRY_USER" \
