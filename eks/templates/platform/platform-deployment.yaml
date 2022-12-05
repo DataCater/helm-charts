@@ -31,7 +31,7 @@ spec:
         - name: datacater-platform
           env:
             {{- include "datacater.platform.env" . | indent 12 }}
-            {{- include "datacater.platform-secrets.env" . | indent 12 }}
+            {{- include "datacater.platform-secrets.envFrom" . | indent 12 }}
           securityContext:
             privileged: true
           image: "{{ .Values.platform.image.repository }}:{{ .Values.platform.image.tag | default .Chart.AppVersion }}"

@@ -47,16 +47,6 @@ Helper function for getting env variables for platform
     configMapKeyRef:
         name: datacater-platform-config
         key: dc_mailer_from_name
-- name: MAILER_TLS
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: mailer_tls
-- name: MAILER_SSL
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: mailer_ssl
 - name:  DC_PUBLIC_URI
   valueFrom:
     configMapKeyRef:
@@ -107,16 +97,6 @@ Helper function for getting env variables for platform
     configMapKeyRef:
         name: datacater-platform-config
         key: kafka_port
-- name: PG_DATABASE_NAME
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: pg_database_name
-- name: PG_HOST
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: pg_host
 - name: PIPELINE_REGISTRY
   valueFrom:
     configMapKeyRef:
@@ -124,30 +104,35 @@ Helper function for getting env variables for platform
         key: pipeline_registry
 {{- end }}
 
-{{/*
-Helper function loading secrets to as env variables
+{{/* Helper function for envFrom
 */}}
-{{- define "datacater.platform-secrets.env" }}
+
+{{- define "datacater.platform-secrets.envFrom" }}
 {{- range $key, $val := .Values.dataCaterSecretMappings.mailerSecrets }}
-- name: {{ $key | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.mailerSecretName }}
-        key: {{ $val }}
+- secretRef:
+      name: datacater-mailer
+- secretRef:
+      name: datacater-db-secret
+- secretRef:
+      name: datacater-docker
+- secretRef:
+      name: datacater
 {{- end }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.pgSecrets }}
-- name: {{ $val | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.pgSecretName }}
-        key: {{ $val }}
 {{- end }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.dockerSecrets }}
-- name: {{ $val | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.dockerLoginSecret }}
-        key: {{ $val }}
+
+{{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
+*/}}
+{{- define "datacater.registry.imagePullSecret" }}
+{{- with .Values.datacater.image }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
+
+{{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
+*/}}
+{{- define "datacater.pipeline.imagePullSecret" }}
+{{- with .Values.datacater.pipeline }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
 
