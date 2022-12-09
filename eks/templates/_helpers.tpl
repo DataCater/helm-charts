@@ -108,7 +108,6 @@ Helper function for getting env variables for platform
 */}}
 
 {{- define "datacater.platform-secrets.envFrom" }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.mailerSecrets }}
 - secretRef:
       name: datacater-mailer
 - secretRef:
@@ -117,7 +116,6 @@ Helper function for getting env variables for platform
       name: datacater-docker
 - secretRef:
       name: datacater
-{{- end }}
 {{- end }}
 
 {{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
