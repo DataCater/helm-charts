@@ -1,9 +1,7 @@
 datacater:
+  # annotations for the main datacater ingress
+  ingressAnnotations: {}
   # set mail credentials and whether tls and ssl should be on. Used for sending notification by datacater.
-  ingressAnnotations:
-    kubernetes.io/ingress.class: "alb"
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: instance
   mail:
     host: "mail.example.com"
     password: "my-password"
@@ -43,6 +41,17 @@ datacater:
   kafka: {}
   # define replicas and resources for kafka-connect
   connect: {}
+
+ingress:
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 # DataCater uses a service called udf-runner for enabling interactive python development
 udfRunner:
