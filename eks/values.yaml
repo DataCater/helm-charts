@@ -1,5 +1,9 @@
 datacater:
   # set mail credentials and whether tls and ssl should be on. Used for sending notification by datacater.
+  ingressAnnotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
   mail:
     host: "mail.example.com"
     password: "my-password"
