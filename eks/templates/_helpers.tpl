@@ -126,6 +126,16 @@ Helper function for getting env variables for platform
 {{- end }}
 {{- end }}
 
+  DOCKER_REGISTRY_USER: {{ .Values.datacater.docker.user | quote }}
+  DOCKER_REGISTRY_PASSWORD: {{ .Values.datacater.docker.password | quote }}
+  DOCKER_REGISTRY_URI: {{ .Values.datacater.uri | quote }}
+
+{{- define "datacater.registry.secret" }}
+{{- with .Values.datacater.image }}
+{{- printf "{\"docker_registry_user\":\"%s\", \"docker_registry_password\":\"%s\", \"docker_registry_uri\":\"%s\"" .username .password .registry (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
+
 {{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
 */}}
 {{- define "datacater.pipeline.imagePullSecret" }}
