@@ -42,17 +42,6 @@ datacater:
   # define replicas and resources for kafka-connect
   connect: {}
 
-ingress:
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 # DataCater uses a service called udf-runner for enabling interactive python development
 udfRunner:
   image:
@@ -66,7 +55,19 @@ platform:
   # https://aws.amazon.com/blogs/containers/setting-up-end-to-end-tls-encryption-on-amazon-eks-with-the-new-aws-load-balancer-controller/
   serviceType: NodePort
   ingress:
-    enabled: true
+    enabled: false
+    className: example-name
+    annotations: {}
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: chart-example.local-tls
+      #   hosts:
+      #     - chart-example.local
+
   # Storage for flat files stored by DataCater
   storageRequest: 50Gi
   image:

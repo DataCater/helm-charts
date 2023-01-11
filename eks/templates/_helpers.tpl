@@ -128,7 +128,7 @@ Helper function for getting env variables for platform
 
   DOCKER_REGISTRY_USER: {{ .Values.datacater.docker.user | quote }}
   DOCKER_REGISTRY_PASSWORD: {{ .Values.datacater.docker.password | quote }}
-  DOCKER_REGISTRY_URI: {{ .Values.datacater.uri | quote }}
+  DOCKER_REGISTRY_URI: {{ .Values.datacater.docker.uri | quote }}
 
 {{- define "datacater.registry.secret" }}
 {{- with .Values.datacater.image }}
@@ -163,6 +163,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{/*
+Selector labels
+*/}}
+{{- define "datacater-chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "datacater-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{- define "datacater-platform.labels" -}}
 helm.sh/chart: {{ include "datacater-chart.chart" . }}
@@ -173,6 +180,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}-platform
 {{- end }}
 
+{{/*
+Selector labels
+*/}}
+{{- define "datacater-platform.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "datacater-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create the name of the service account to use

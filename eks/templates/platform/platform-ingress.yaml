@@ -1,15 +1,21 @@
+{{- if .Values.platform.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: datacater-ingress
+  labels:
+    {{- include "datacater-chart.labels" . | nindent 4 }}
   {{- with .Values.datacater.ingressAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
+  {{- if and .Values.platform.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.platform.ingress.className }}
+  {{- end }}
+  {{- if .Values.platform.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
+    {{- range .Values.platform.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -18,7 +24,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .Values.platform.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -28,9 +34,15 @@ spec:
             pathType: {{ .pathType }}
             {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
                 name: platform-service
                 port:
                   number: 80
+              {{- else }}
+              serviceName: platform-service
+              servicePort: 80
+              {{- end }}
           {{- end }}
     {{- end }}
+{{- end }}
