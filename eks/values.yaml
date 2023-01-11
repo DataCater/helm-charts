@@ -63,7 +63,7 @@ platform:
         paths:
           - path: /
             pathType: Prefix
-    tls: {}
+    tls: []
       # - secretName: chart-example.local-tls
       #   hosts:
       #     - chart-example.local
