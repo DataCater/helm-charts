@@ -42,17 +42,6 @@ datacater:
   # define replicas and resources for kafka-connect
   connect: {}
 
-ingress:
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 # DataCater uses a service called udf-runner for enabling interactive python development
 udfRunner:
   image:
