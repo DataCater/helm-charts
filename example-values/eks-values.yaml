@@ -1,8 +1,34 @@
 datacater:
+  # set mail credentials and whether tls and ssl should be on. Used for sending notification by datacater.
+  mail:
+    host: "mail.example.com"
+    password: "my-password"
+    port: "587"
+    user: "mail-user@example.com"
+    tls: "no"
+    ssl: "no"
+  # set postgres credentials for usage by datacater internally
+  postgres:
+    host: "my.postgres.example.com"
+    port: "5432"
+    user: "postgres"
+    password: "password"
+    database: "public"
+  # set your datacater registry credentials to retrieve you copy of datacater in Kubernetes
+  image:
+    registry: "images.datacater.io"
+    username: "yourcompany@datacater.io"
+    email: "yourcompany@datacater.io"
+    password: "company-datacater-pw"
+  # set your pipeline container registry credentials to store deployments
+  pipeline:
+    registry: "000000000000.dkr.ecr.eu-central-1.amazonaws.com/repository"
+    username: "AWS"
+    password: "ecr-credential"
+    email: "AWS"
   publicDomainName: datacater.example.com
-  # Elastic Container Registyr is used for storing pipeline images.
+  # Elastic Container Registry is used for storing pipeline images.
   # pipelineRegistry: $account_id.dkr.ecr.$region.amazonaws.com/repository
-  pipelineRegistry: 000000000000.dkr.ecr.eu-central-1.amazonaws.com/repository
   kafka:
     replicas: 3
     resources:

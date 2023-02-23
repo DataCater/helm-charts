@@ -2,6 +2,10 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
   name: datacater
+  {{- with .Values.datacater.connect.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   version: 3.2.3
   resources:
@@ -34,3 +38,10 @@ spec:
     pod:
       imagePullSecrets:
         - name: datacater
+      affinity:
+        {{- toYaml .Values.datacater.kafka.affinity | nindent 8 }}
+      metadata:
+        {{- with .Values.datacater.connect.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}

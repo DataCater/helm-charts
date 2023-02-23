@@ -47,16 +47,6 @@ Helper function for getting env variables for platform
     configMapKeyRef:
         name: datacater-platform-config
         key: dc_mailer_from_name
-- name: MAILER_TLS
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: mailer_tls
-- name: MAILER_SSL
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: mailer_ssl
 - name:  DC_PUBLIC_URI
   valueFrom:
     configMapKeyRef:
@@ -107,16 +97,6 @@ Helper function for getting env variables for platform
     configMapKeyRef:
         name: datacater-platform-config
         key: kafka_port
-- name: PG_DATABASE_NAME
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: pg_database_name
-- name: PG_HOST
-  valueFrom:
-    configMapKeyRef:
-        name: datacater-platform-config
-        key: pg_host
 - name: PIPELINE_REGISTRY
   valueFrom:
     configMapKeyRef:
@@ -124,30 +104,43 @@ Helper function for getting env variables for platform
         key: pipeline_registry
 {{- end }}
 
-{{/*
-Helper function loading secrets to as env variables
+{{/* Helper function for envFrom
 */}}
-{{- define "datacater.platform-secrets.env" }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.mailerSecrets }}
-- name: {{ $key | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.mailerSecretName }}
-        key: {{ $val }}
+
+{{- define "datacater.platform-secrets.envFrom" }}
+- secretRef:
+      name: datacater-mailer
+- secretRef:
+      name: datacater-db-secret
+- secretRef:
+      name: datacater-docker
+- secretRef:
+      name: datacater
 {{- end }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.pgSecrets }}
-- name: {{ $val | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.pgSecretName }}
-        key: {{ $val }}
+
+{{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
+*/}}
+{{- define "datacater.registry.imagePullSecret" }}
+{{- with .Values.datacater.image }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
-{{- range $key, $val := .Values.dataCaterSecretMappings.dockerSecrets }}
-- name: {{ $val | upper }}
-  valueFrom:
-      secretKeyRef:
-        name: {{ $.Values.dataCaterSecretMappings.dockerLoginSecret }}
-        key: {{ $val }}
+{{- end }}
+
+  DOCKER_REGISTRY_USER: {{ .Values.datacater.docker.user | quote }}
+  DOCKER_REGISTRY_PASSWORD: {{ .Values.datacater.docker.password | quote }}
+  DOCKER_REGISTRY_URI: {{ .Values.datacater.docker.uri | quote }}
+
+{{- define "datacater.registry.secret" }}
+{{- with .Values.datacater.image }}
+{{- printf "{\"docker_registry_user\":\"%s\", \"docker_registry_password\":\"%s\", \"docker_registry_uri\":\"%s\"" .username .password .registry (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
+
+{{/* This is a adjusted example from https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets.
+*/}}
+{{- define "datacater.pipeline.imagePullSecret" }}
+{{- with .Values.datacater.pipeline }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
 
@@ -170,6 +163,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{/*
+Selector labels
+*/}}
+{{- define "datacater-chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "datacater-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{- define "datacater-platform.labels" -}}
 helm.sh/chart: {{ include "datacater-chart.chart" . }}
@@ -180,6 +180,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}-platform
 {{- end }}
 
+{{/*
+Selector labels
+*/}}
+{{- define "datacater-platform.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "datacater-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create the name of the service account to use

@@ -22,7 +22,14 @@ spec:
           roles: superuser
           authz_exception: false
     podTemplate:
+      metadata:
+        {{- with .Values.datacater.elasticsearch.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       spec:
+        affinity:
+          {{- toYaml .Values.datacater.elasticsearch.affinity | nindent 10 }}
         containers:
         - name: elasticsearch
           env:
@@ -34,4 +41,4 @@ spec:
               memory: "1G"
             limits:
               cpu: "500m"
-              memory: "1G"
+              memory: "4G"
