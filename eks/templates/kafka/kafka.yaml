@@ -2,6 +2,10 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: datacater
+  {{- with .Values.datacater.kafka.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   kafka:
     resources:
@@ -28,11 +32,44 @@ spec:
     storage:
       type: persistent-claim
       size: 500Gi
+    template:
+      pod:
+        affinity:
+          {{- toYaml .Values.datacater.kafka.affinity | nindent 10 }}
+        metadata:  
+          {{- with .Values.datacater.kafka.annotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
   zookeeper:
     replicas: 3
     storage:
       type: persistent-claim
       size: 20Gi
+    resources:
+      {{- toYaml .Values.datacater.zookeeper.resources | nindent 6 }}
+    template:
+      pod:
+        affinity:
+          {{- toYaml .Values.datacater.zookeeper.affinity | nindent 10 }}
+        metadata:  
+          {{- with .Values.datacater.zookeeper.annotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    template:
+      pod:
+        affinity:
+          {{- toYaml .Values.datacater.entityOperator.affinity | nindent 10 }}
+        metadata:
+          {{- with .Values.datacater.entityOperator.annotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+    topicOperator: 
+      resources:
+        {{- toYaml .Values.datacater.entityOperator.topicOperator.resources | nindent 8 }}
+    userOperator: 
+      resources:
+        {{- toYaml .Values.datacater.entityOperator.userOperator.resources | nindent 8 }}

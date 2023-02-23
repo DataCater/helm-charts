@@ -38,10 +38,17 @@ datacater:
   # Used for Google Cloud ManagedCert and From field in mails.
   publicDomainName: datacater.example.com
   # define replicas and resources for kafka
-  kafka: {}
+  kafka: 
+    annotations: {}
+    affinity: {}
+  zookeeper: 
+    annotations: {}
+    affinity: {}
   # define replicas and resources for kafka-connect
-  connect: {}
-
+  connect: 
+    annotations: {}
+    affinity: {}
+    
 # DataCater uses a service called udf-runner for enabling interactive python development
 udfRunner:
   image:
@@ -53,6 +60,7 @@ platform:
   # It is thoroughly integreated and acts as one of the best practices mentioned by aws, see
   # https://aws.github.io/aws-eks-best-practices/security/docs/network/#ingress-controllers-and-load-balancers
   # https://aws.amazon.com/blogs/containers/setting-up-end-to-end-tls-encryption-on-amazon-eks-with-the-new-aws-load-balancer-controller/
+  annotations: {}
   serviceType: NodePort
   ingress:
     enabled: false
